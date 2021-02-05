@@ -4,20 +4,24 @@ import SearchBar from './SearchBar';
 const API_KEY = process.env.REACT_APP_API_KEY
 
 class App extends React.Component {
-    onSearchSubmit(term) {
-        
-        axios.get('https://api.unsplash.com/search/photos', {
+    state = { images: [] }
+
+    onSearchSubmit = async (term) =>  {
+        const response = await axios.get('https://api.unsplash.com/search/photos', {
             params: { query: term },
             headers: {
                 Authorization: `Client-ID ${API_KEY}}`
             }
-        });
+        })
+        
+        this.setState({ images: response.data.results })
     }
 
     render() {
         return (
             <div className="ui container" style={{ marginTop: '10px' }}>
                 <SearchBar runOnSubmit={this.onSearchSubmit}/>
+                Found: {this.state.images.length} images
             </div>
         )
     }
